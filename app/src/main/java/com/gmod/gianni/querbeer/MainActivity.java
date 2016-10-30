@@ -11,12 +11,40 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.view.WindowManager;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 
 public class MainActivity extends AppCompatActivity {
 
+
+    private ProgressBar progressLoading;
+    private FloatingActionButton fab;
+
     private EditText inputText;
     private TextInputLayout inputLayoutText;
+
+    private LinearLayout beerDetails;
+    private TextView beerName;
+    private TextView beerDescription;
+
+    private ImageView beerLogo;
+
+    private void bindVievs(){
+
+        progressLoading = (ProgressBar) findViewById(R.id.progress_loading);
+        fab = (FloatingActionButton) findViewById(R.id.fab);
+        inputLayoutText = (TextInputLayout) findViewById(R.id.input_layout_text);
+        inputText = (EditText) findViewById(R.id.input_text);
+        beerDetails =  (LinearLayout) findViewById(R.id.beer_details);
+        beerName = (TextView) findViewById(R.id.beer_name);
+        beerDescription = (TextView) findViewById(R.id.beer_description);
+        beerLogo = (ImageView) findViewById(R.id.beer_logo);
+
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,10 +53,12 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        inputLayoutText = (TextInputLayout) findViewById(R.id.input_layout_text);
-        inputText = (EditText) findViewById(R.id.input_text);
+        bindVievs();
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
+        beerLogo.setImageResource(R.drawable.ic_demo);
+        beerName.setText("Orval");
+        beerDescription.setText("Birra Trappista belga, ambrata, 6.5 gradi");
+
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -37,12 +67,15 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+
+                Snackbar.make(view, "Listing beers, please wait!", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
+
+                beerDetails.setVisibility(View.VISIBLE);
+
             }
         });
     }
-
 
     private boolean validateText() {
         if (inputText.getText().toString().trim().isEmpty()) {
