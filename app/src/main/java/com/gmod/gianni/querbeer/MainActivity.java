@@ -31,7 +31,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public static final String TAG = "BAD.MainActivity";
-    private static final String apiKey = "APIKEYYYYYYYYYYYYYYYY;
+    private static final String apiKey = "4e575388b47e83690f10637f851fd9ff";
     private static final String format = "json";
 
     private BeerInterface instance;
@@ -124,7 +124,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             Snackbar.make(v, "Listing beers, please wait!", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
-
             progressLoading.setVisibility(View.VISIBLE);
             beerDetails.setVisibility(View.GONE);
 
