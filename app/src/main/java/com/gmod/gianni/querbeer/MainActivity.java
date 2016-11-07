@@ -133,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             randomBeer();
 
-//           TODO gestire qui
+//           TODO gestire qui tutto
 //            String beerQuery = inputText.getText().toString();
 //            instance.searchForBeer(beerQuery).enqueue(this);
         }
