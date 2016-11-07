@@ -114,6 +114,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         instance = buildBeerInstance();
         randomBeer();
 
+        inputText.setVisibility(View.GONE);
+        inputLayoutText.setVisibility(View.GONE);
         fab.setOnClickListener(this);
     }
 
@@ -122,9 +124,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
 
         if (v.getId() == R.id.fab) {
-            if (!validateText()) {
-                return;
-            }
+//            if (!validateText()) {
+//                return;
+//            }
 
             Snackbar.make(v, "Searching beer, please wait!", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
