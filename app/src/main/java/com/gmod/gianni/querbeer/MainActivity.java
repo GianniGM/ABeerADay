@@ -87,7 +87,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             progressLoading.setVisibility(View.VISIBLE);
             beerDetails.setVisibility(View.GONE);
 
-            instance.searchForBeer("search", query ,apiKey, format).enqueue(this);
+            instance.searchForBeer("search", query , "beer",apiKey, format).enqueue(this);
         }
 
 
@@ -139,7 +139,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
             String beerQuery = inputText.getText().toString();
-            searchBeer(beerQuery);
+            searchBeer(beerQuery.toLowerCase().trim());
         }
 
     }
@@ -173,14 +173,51 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //Picasso
 
+
+        //TODO PROBLEMI SERI CON LA SERIALIZZAZIONE
+
+        if(result == null){
+            Toast.makeText(MainActivity.this, "Internal Error",
+                    Toast.LENGTH_SHORT).show();
+
+            return;
+        }
+
+        if(result.getStatus() != "success") {
+
+            Toast.makeText(MainActivity.this, "Connection Refused!",
+                    Toast.LENGTH_SHORT).show();
+
+            return;
+        }
+
+        String description = result.getData().get(0).getDescription();
+        String typeName = result.getData().get(0).getStyle().getName();
+        String abv = result.getData().get(0).getAbv();
+        String name = result.getData().get(0).getName();
+
+        if(abv == null || abv.contentEquals("null")){
+            abv = "";
+        }else{
+        abv =  " (" +  abv + "%)";
+        }
+
+        if(description == null || abv.contentEquals("null")){
+            description = "";
+        }
+
+        if(typeName == null || typeName.contentEquals("null")){
+            description = "";
+        }
+
+        //ITERARE SUI RISULTATI (TROVARE UN MODO PER SWIFTARE
         beerLogo.setImageResource(R.drawable.ic_demo);
         progressLoading.setVisibility(View.GONE);
         beerDetails.setVisibility(View.VISIBLE);
-        beerName.setText(result.getData().getName());
-        beerDescription.setText(result.getData().getDescription());
-        type.setText(result.getData().getStyle().getName() + " (" + result.getData().getAbv() + "%)" );
-        Log.d(TAG, result.getData().getName() + "-" +  result.getData().getName());
-
+        beerName.setText(name);
+        beerDescription.setText(description);
+        type.setText(typeName + abv);
+        Log.d(TAG, result.getData().get(0).getName() + "-" +  result.getData().get(0).getName());
     }
 
     private void handleError(Throwable e) {
