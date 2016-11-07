@@ -175,19 +175,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String typeName = result.getData().getStyle().getName();
         String abv = result.getData().getAbv();
 
-//        if(abv == null || abv.contentEquals("null")){
-//            abv = "";
-//        }else{
+        if(abv == null || abv.contentEquals("null")){
+            abv = "";
+        }else{
             abv =  " (" +  abv + "%)";
-//        }
-//
-//        if(description == null || abv.contentEquals("null")){
-//            description = "";
-//        }
-//
-//        if(typeName == null || typeName.contentEquals("null")){
-//            description = "";
-//        }
+        }
+
+        if(description == null || abv.contentEquals("null")){
+            description = "";
+        }
+
+        if(typeName == null || typeName.contentEquals("null")){
+            description = "";
+        }
 
         beerLogo.setImageResource(R.drawable.ic_demo);
         progressLoading.setVisibility(View.GONE);
