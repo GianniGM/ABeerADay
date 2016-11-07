@@ -20,8 +20,6 @@ import android.widget.Toast;
 
 import com.gmod.gianni.querbeer.model.Beer;
 
-import org.w3c.dom.Text;
-
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -76,15 +74,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
-    private void randomBeer (){
+    private void searchBeer(String query){
         //fare richiesta http con l'url random e stampare tutto quello che ti da come schermata iniziale
         //mettere anche la barra di caricamento on qui.
 
-        progressLoading.setVisibility(View.VISIBLE);
-        beerDetails.setVisibility(View.GONE);
+        if(query.contentEquals("random")){
+            progressLoading.setVisibility(View.VISIBLE);
+            beerDetails.setVisibility(View.GONE);
 
-        String beerQuery = "random";
-        instance.searchForBeer(beerQuery,apiKey, format).enqueue(this);
+            instance.searchForBeer(query,apiKey, format).enqueue(this);
+        }else{
+            progressLoading.setVisibility(View.VISIBLE);
+            beerDetails.setVisibility(View.GONE);
+
+            instance.searchForBeer("search", query ,apiKey, format).enqueue(this);
+        }
+
+
     }
 
     private void requestFocus(View view) {
@@ -112,7 +118,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         bindViews();
         instance = buildBeerInstance();
-        randomBeer();
+        searchBeer("random");
 
         fab.setOnClickListener(this);
     }
@@ -131,11 +137,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             progressLoading.setVisibility(View.VISIBLE);
             beerDetails.setVisibility(View.GONE);
 
-            randomBeer();
 
-//           TODO gestire qui tutto
-//            String beerQuery = inputText.getText().toString();
-//            instance.searchForBeer(beerQuery).enqueue(this);
+            String beerQuery = inputText.getText().toString();
+            searchBeer(beerQuery);
         }
 
     }

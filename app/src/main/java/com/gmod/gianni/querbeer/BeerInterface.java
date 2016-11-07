@@ -18,4 +18,7 @@ public interface BeerInterface {
     @GET("beer/{query}")
     Call<Beer> searchForBeer(@Path("query") String query, @Query("key") String key, @Query("format") String format);
 
+    @GET("beer/{query}")
+    Call<Beer> searchForBeer(@Path("query") String query,@Query("q") String name, @Query("key") String key, @Query("format") String format);
+
 }
