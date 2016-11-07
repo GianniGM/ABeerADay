@@ -171,12 +171,30 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //Picasso
 
+        String description = result.getData().getDescription();
+        String typeName = result.getData().getStyle().getName();
+        String abv = result.getData().getAbv();
+
+//        if(abv == null || abv.contentEquals("null")){
+//            abv = "";
+//        }else{
+            abv =  " (" +  abv + "%)";
+//        }
+//
+//        if(description == null || abv.contentEquals("null")){
+//            description = "";
+//        }
+//
+//        if(typeName == null || typeName.contentEquals("null")){
+//            description = "";
+//        }
+
         beerLogo.setImageResource(R.drawable.ic_demo);
         progressLoading.setVisibility(View.GONE);
         beerDetails.setVisibility(View.VISIBLE);
         beerName.setText(result.getData().getName());
-        beerDescription.setText(result.getData().getDescription());
-        type.setText(result.getData().getStyle().getName() + " (" + result.getData().getAbv() + "%)" );
+        beerDescription.setText(description);
+        type.setText(typeName + abv);
         Log.d(TAG, result.getData().getName() + "-" +  result.getData().getName());
 
     }
