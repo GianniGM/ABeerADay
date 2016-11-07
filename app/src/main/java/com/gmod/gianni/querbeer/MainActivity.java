@@ -20,6 +20,8 @@ import android.widget.Toast;
 
 import com.gmod.gianni.querbeer.model.Beer;
 
+import org.w3c.dom.Text;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private LinearLayout beerDetails;
     private TextView beerName;
     private TextView beerDescription;
+    private TextView type;
 
     private ImageView beerLogo;
 
@@ -58,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         beerName = (TextView) findViewById(R.id.beer_name);
         beerDescription = (TextView) findViewById(R.id.beer_description);
         beerLogo = (ImageView) findViewById(R.id.beer_logo);
+        type = (TextView) findViewById(R.id.beer_type);
     }
 
     private boolean validateText() {
@@ -122,7 +126,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 return;
             }
 
-            Snackbar.make(v, "Listing beers, please wait!", Snackbar.LENGTH_LONG)
+            Snackbar.make(v, "Searching beer, please wait!", Snackbar.LENGTH_LONG)
                     .setAction("Action", null).show();
             progressLoading.setVisibility(View.VISIBLE);
             beerDetails.setVisibility(View.GONE);
@@ -168,9 +172,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         beerLogo.setImageResource(R.drawable.ic_demo);
         progressLoading.setVisibility(View.GONE);
         beerDetails.setVisibility(View.VISIBLE);
-        beerName.setText(new StringBuilder().append("Name").append(result.getData().getName()));
-        beerDescription.setText(new StringBuilder().append("Description").append(result.getData().getDescription()));
-
+        beerName.setText(result.getData().getName());
+        beerDescription.setText(result.getData().getDescription());
+        type.setText(result.getData().getStyle().getName() + " (" + result.getData().getAbv() + "%)" );
         Log.d(TAG, result.getData().getName() + "-" +  result.getData().getName());
 
     }

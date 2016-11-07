@@ -17,6 +17,14 @@ public class Data {
     @Expose
     private String name;
 
+    @SerializedName("ibu")
+    @Expose
+    private String ibu;
+
+    @SerializedName("abv")
+    @Expose
+    private String abv;
+
     @SerializedName("nameDisplay")
     @Expose
     private String nameDisplay;
@@ -80,5 +88,21 @@ public class Data {
 
     public void setStyle(Style style) {
         this.style = style;
+    }
+
+    public String getIbu() {
+        return ibu;
+    }
+
+    public void setIbu(String ibu) {
+        this.ibu = ibu;
+    }
+
+    public String getAbv() {
+        return abv;
+    }
+
+    public void setAbv(String abv) {
+        this.abv = abv;
     }
 }
