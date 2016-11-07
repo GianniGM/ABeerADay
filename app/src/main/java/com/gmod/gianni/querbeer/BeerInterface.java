@@ -10,12 +10,12 @@ import com.gmod.gianni.querbeer.model.Beer;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Path;
-
+import retrofit2.http.Query;
 
 
 public interface BeerInterface {
 
     @GET("beer/{query}")
-    Call<Beer> searchForBeer(@Path("query") String query);
+    Call<Beer> searchForBeer(@Path("query") String query, @Query("key") String key, @Query("format") String format);
 
 }

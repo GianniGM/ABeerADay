@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public static final String TAG = "BAD.MainActivity";
+    private static final String apiKey = "APIKEYYYYYYYYYYYYYYYY;
+    private static final String format = "json";
 
     private BeerInterface instance;
 
@@ -45,6 +47,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView beerDescription;
 
     private ImageView beerLogo;
+
 
     private void bindViews() {
         progressLoading = (ProgressBar) findViewById(R.id.progress_loading);
@@ -77,11 +80,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         beerDetails.setVisibility(View.GONE);
 
         String beerQuery = "random";
-        instance.searchForBeer(beerQuery).enqueue(this);
-
-        beerLogo.setImageResource(R.drawable.ic_demo);
-        beerName.setText("Orval");
-        beerDescription.setText("Birra Trappista belga, ambrata, 6.5 gradi");
+        instance.searchForBeer(beerQuery,apiKey, format).enqueue(this);
     }
 
     private void requestFocus(View view) {
@@ -108,8 +107,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setSupportActionBar(toolbar);
 
         bindViews();
-        //TODO GESTIRE QUI
-//        randomBeer();
+        instance = buildBeerInstance();
+        randomBeer();
 
         fab.setOnClickListener(this);
     }
@@ -129,9 +128,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             progressLoading.setVisibility(View.VISIBLE);
             beerDetails.setVisibility(View.GONE);
 
-            String beerQuery = inputText.getText().toString();
+            randomBeer();
 
-            //TODO gestire qui
+//           TODO gestire qui
+//            String beerQuery = inputText.getText().toString();
 //            instance.searchForBeer(beerQuery).enqueue(this);
         }
 
@@ -162,11 +162,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onResponse(Call<Beer> call, Response<Beer> response) {
+        Beer result = response.body();
+
+        //Picasso
+
+        beerLogo.setImageResource(R.drawable.ic_demo);
+        progressLoading.setVisibility(View.GONE);
+        beerDetails.setVisibility(View.VISIBLE);
+        beerName.setText(new StringBuilder().append("Name").append(result.getData().getName()));
+        beerDescription.setText(new StringBuilder().append("Description").append(result.getData().getDescription()));
+
+        Log.d(TAG, result.getData().getName() + "-" +  result.getData().getName());
 
     }
 
     private void handleError(Throwable e) {
-        Log.d(TAG, "Runtime error during Pokemon download", e);
+        Log.d(TAG, "Runtime error during Beer download", e);
         progressLoading.setVisibility(View.GONE);
 
         Toast.makeText(MainActivity.this, "Connection Refused!",
