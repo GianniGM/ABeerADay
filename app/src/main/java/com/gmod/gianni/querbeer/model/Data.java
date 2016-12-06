@@ -17,9 +17,17 @@ public class Data {
     @Expose
     private String name;
 
-    @SerializedName("ibu")
+//    @SerializedName("ibu")
+//    @Expose
+//    private String ibu;
+
+    @SerializedName("isOrganic")
     @Expose
-    private String ibu;
+    private String isOrganic;
+
+    @SerializedName("status")
+    @Expose
+    private String status;
 
     @SerializedName("abv")
     @Expose
@@ -41,6 +49,7 @@ public class Data {
     @Expose
     private Style style;
 
+    public Data() {}
 
     public String getId() {
         return id;
@@ -56,6 +65,30 @@ public class Data {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getIsOrganic() {
+        return isOrganic;
+    }
+
+    public void setIsOrganic(String isOrganic) {
+        this.isOrganic = isOrganic;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public String getAbv() {
+        return abv;
+    }
+
+    public void setAbv(String abv) {
+        this.abv = abv;
     }
 
     public String getNameDisplay() {
@@ -88,21 +121,5 @@ public class Data {
 
     public void setStyle(Style style) {
         this.style = style;
-    }
-
-    public String getIbu() {
-        return ibu;
-    }
-
-    public void setIbu(String ibu) {
-        this.ibu = ibu;
-    }
-
-    public String getAbv() {
-        return abv;
-    }
-
-    public void setAbv(String abv) {
-        this.abv = abv;
     }
 }

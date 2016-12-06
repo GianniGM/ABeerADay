@@ -1,5 +1,6 @@
 package com.gmod.gianni.querbeer;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,7 +12,6 @@ import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -19,6 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.gmod.gianni.querbeer.model.Beer;
+import com.google.android.gms.appindexing.Action;
+import com.google.android.gms.appindexing.AppIndex;
+import com.google.android.gms.appindexing.Thing;
+import com.google.android.gms.common.api.GoogleApiClient;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -31,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     public static final String TAG = "BAD.MainActivity";
+
     private static final String apiKey = "4e575388b47e83690f10637f851fd9ff";
     private static final String format = "json";
 
@@ -48,6 +53,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private TextView type;
 
     private ImageView beerLogo;
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    private GoogleApiClient client;
 
 
     private void bindViews() {
@@ -65,7 +75,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private boolean validateText() {
         if (inputText.getText().toString().trim().isEmpty()) {
             inputLayoutText.setError(getString(R.string.err_msg_text));
-            requestFocus(inputText);
+//            requestFocus(inputText);
             return false;
         } else {
             inputLayoutText.setErrorEnabled(false);
@@ -74,32 +84,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         return true;
     }
 
-    private void searchBeer(String query){
+    private void searchBeer(String query) {
         //fare richiesta http con l'url random e stampare tutto quello che ti da come schermata iniziale
         //mettere anche la barra di caricamento on qui.
 
-        if(query.contentEquals("random")){
-            progressLoading.setVisibility(View.VISIBLE);
-            beerDetails.setVisibility(View.GONE);
-
-            instance.searchForBeer(query,apiKey, format).enqueue(this);
-        }else{
-            progressLoading.setVisibility(View.VISIBLE);
-            beerDetails.setVisibility(View.GONE);
-
-            instance.searchForBeer("search", query , "beer",apiKey, format).enqueue(this);
-        }
+        progressLoading.setVisibility(View.VISIBLE);
+        beerDetails.setVisibility(View.GONE);
 
 
+        instance.searchForBeer( "search", query, "beer", apiKey, format).enqueue(this);
+        Log.d(TAG, "GET SENDED:" + query);
     }
 
-    private void requestFocus(View view) {
-        if (view.requestFocus()) {
-            getWindow().setSoftInputMode(WindowManager.LayoutParams.FLAG_LOCAL_FOCUS_MODE);
-        }
-    }
+//    private void requestFocus(View view) {
+//        if (view.requestFocus()) {
+//            getWindow().setSoftInputMode(WindowManager.LayoutParams.FLAG_LOCAL_FOCUS_MODE);
+//        }
+//    }
 
-    private BeerInterface buildBeerInstance(){
+    private BeerInterface buildBeerInstance() {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl("http://api.brewerydb.com/v2/")
                 .addConverterFactory(GsonConverterFactory.create())
@@ -118,9 +121,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         bindViews();
         instance = buildBeerInstance();
-        searchBeer("random");
+
 
         fab.setOnClickListener(this);
+
+        searchBeer("orval");
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
 
@@ -136,7 +145,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .setAction("Action", null).show();
             progressLoading.setVisibility(View.VISIBLE);
             beerDetails.setVisibility(View.GONE);
-
 
             String beerQuery = inputText.getText().toString();
             searchBeer(beerQuery.toLowerCase().trim());
@@ -171,53 +179,61 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onResponse(Call<Beer> call, Response<Beer> response) {
         Beer result = response.body();
 
+        Log.d(TAG, "STATUS RESPONSE:" + response.headers());
+
         //Picasso
 
-
-        //TODO PROBLEMI SERI CON LA SERIALIZZAZIONE
-
-        if(result == null){
-            Toast.makeText(MainActivity.this, "Internal Error",
+        if (result == null) {
+            Toast.makeText(MainActivity.this, "Server Error!",
                     Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "results equals to null");
+            return;
+        }
+
+        if (!result.getStatus().trim().toLowerCase().contains("success")) {
+
+            Toast.makeText(MainActivity.this, "Bad Request!",
+                    Toast.LENGTH_SHORT).show();
+
+            Log.d(TAG, "received results not succeded: bad request");
 
             return;
         }
 
-        if(result.getStatus() != "success") {
-
-            Toast.makeText(MainActivity.this, "Connection Refused!",
-                    Toast.LENGTH_SHORT).show();
-
-            return;
-        }
 
         String description = result.getData().get(0).getDescription();
         String typeName = result.getData().get(0).getStyle().getName();
         String abv = result.getData().get(0).getAbv();
         String name = result.getData().get(0).getName();
 
-        if(abv == null || abv.contentEquals("null")){
+        if (name == null || name.contentEquals("null")) {
+            name = "NONAME beer";
+        }
+
+        if (description == null || description.contentEquals("null")) {
+            description = "";
+        }
+
+        if (typeName == null || typeName.contentEquals("null")) {
+            description = "";
+        }
+
+        if (abv == null || abv.contentEquals("null")) {
             abv = "";
-        }else{
-        abv =  " (" +  abv + "%)";
-        }
-
-        if(description == null || abv.contentEquals("null")){
-            description = "";
-        }
-
-        if(typeName == null || typeName.contentEquals("null")){
-            description = "";
+        } else {
+            abv = " (" + abv + "%)";
         }
 
         //ITERARE SUI RISULTATI (TROVARE UN MODO PER SWIFTARE
         beerLogo.setImageResource(R.drawable.ic_demo);
-        progressLoading.setVisibility(View.GONE);
-        beerDetails.setVisibility(View.VISIBLE);
         beerName.setText(name);
         beerDescription.setText(description);
-        type.setText(typeName + abv);
-        Log.d(TAG, result.getData().get(0).getName() + "-" +  result.getData().get(0).getName());
+        type.setText(String.format("%s%s", typeName, abv));
+
+        progressLoading.setVisibility(View.GONE);
+        beerDetails.setVisibility(View.VISIBLE);
+
+        Log.d(TAG, result.getData().get(0).getName() + "-" + result.getData().get(0).getName());
     }
 
     private void handleError(Throwable e) {
@@ -231,5 +247,41 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onFailure(Call<Beer> call, Throwable t) {
         handleError(t);
+    }
+
+    /**
+     * ATTENTION: This was auto-generated to implement the App Indexing API.
+     * See https://g.co/AppIndexing/AndroidStudio for more information.
+     */
+    public Action getIndexApiAction() {
+        Thing object = new Thing.Builder()
+                .setName("Main Page") // TODO: Define a title for the content shown.
+                // TODO: Make sure this auto-generated URL is correct.
+                .setUrl(Uri.parse("http://[ENTER-YOUR-URL-HERE]"))
+                .build();
+        return new Action.Builder(Action.TYPE_VIEW)
+                .setObject(object)
+                .setActionStatus(Action.STATUS_TYPE_COMPLETED)
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        client.connect();
+        AppIndex.AppIndexApi.start(client, getIndexApiAction());
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+
+        // ATTENTION: This was auto-generated to implement the App Indexing API.
+        // See https://g.co/AppIndexing/AndroidStudio for more information.
+        AppIndex.AppIndexApi.end(client, getIndexApiAction());
+        client.disconnect();
     }
 }

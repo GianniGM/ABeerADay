@@ -7,10 +7,22 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Gianni on 05/11/2016.
+ * Created by Gianni G Modica on 05/11/2016.
  */
 
 public class Beer {
+
+    @SerializedName("currentPage")
+    @Expose
+    private int currentPage;
+
+    @SerializedName("numberOfPages")
+    @Expose
+    private int numberOfPages;
+
+    @SerializedName("totalResults")
+    @Expose
+    private int totalResults;
 
     @SerializedName("data")
     @Expose
@@ -24,15 +36,39 @@ public class Beer {
         return status;
     }
 
-    public void setStatus(String status) {
-        this.status = status;
-    }
-
     public List<Data> getData() {
         return data;
     }
 
     public void setData(List<Data> data) {
         this.data = data;
+    }
+
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+    public int getCurrentPage() {
+        return currentPage;
+    }
+
+    public void setCurrentPage(int currentPage) {
+        this.currentPage = currentPage;
+    }
+
+    public int getNumberOfPages() {
+        return numberOfPages;
+    }
+
+    public void setNumberOfPages(int numberOfPages) {
+        this.numberOfPages = numberOfPages;
+    }
+
+    public int getTotalResults() {
+        return totalResults;
+    }
+
+    public void setTotalResults(int totalResults) {
+        this.totalResults = totalResults;
     }
 }
