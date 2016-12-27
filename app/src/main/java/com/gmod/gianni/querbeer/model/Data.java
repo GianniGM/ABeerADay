@@ -17,6 +17,10 @@ public class Data {
     @Expose
     private String name;
 
+    @SerializedName("labels")
+    @Expose
+    private Labels labels;
+
 //    @SerializedName("ibu")
 //    @Expose
 //    private String ibu;
@@ -122,4 +126,14 @@ public class Data {
     public void setStyle(Style style) {
         this.style = style;
     }
+
+    public Labels getLabels() {
+        return labels;
+    }
+
+    public void setLabels(Labels labels) {
+        this.labels = labels;
+    }
 }
+
+

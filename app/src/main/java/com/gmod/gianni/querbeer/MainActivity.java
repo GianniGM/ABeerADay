@@ -23,6 +23,7 @@ import com.google.android.gms.appindexing.Action;
 import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.appindexing.Thing;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.squareup.picasso.Picasso;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -182,6 +183,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.d(TAG, "STATUS RESPONSE:" + response.headers());
 
         //Picasso
+        if(result.getData().get(0).getLabels() != null){
+            
+            Picasso.with(this)
+                    .load(result.getData().get(0).getLabels().getMedium())
+                    .into(beerLogo);
+        }
 
         if (result == null) {
             Toast.makeText(MainActivity.this, "Server Error!",
