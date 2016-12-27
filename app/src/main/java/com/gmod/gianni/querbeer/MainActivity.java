@@ -183,6 +183,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Log.d(TAG, "STATUS RESPONSE:" + response.headers());
 
+        if (result == null) {
+            Toast.makeText(MainActivity.this, "Server Error!",
+                    Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "results equals to null");
+            return;
+        }
+
         //Picasso
         if(result.getData().get(0).getLabels() != null){
 
@@ -190,13 +197,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .load(result.getData().get(0).getLabels().getMedium())
                     .into(beerLogo);
         }
-
-        if (result == null) {
-            Toast.makeText(MainActivity.this, "Server Error!",
-                    Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "results equals to null");
-            return;
-        }
+        
 
         if (!result.getStatus().trim().toLowerCase().contains("success")) {
 
