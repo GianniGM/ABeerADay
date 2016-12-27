@@ -127,7 +127,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         fab.setOnClickListener(this);
 
-        searchBeer("orval");
+        searchBeer("Peroni");
 
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -183,20 +183,24 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         Log.d(TAG, "STATUS RESPONSE:" + response.headers());
 
+
+        if (result == null || result.getData() == null || result.getData().isEmpty()) {
+            Toast.makeText(MainActivity.this, "Beer not founded",
+                    Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "results equals to null");
+            return;
+        }
+
         //Picasso
         if(result.getData().get(0).getLabels() != null){
 
             Picasso.with(this)
                     .load(result.getData().get(0).getLabels().getMedium())
                     .into(beerLogo);
+        }else{
+            beerLogo.setImageResource(R.drawable.ic_demo);
         }
 
-        if (result == null) {
-            Toast.makeText(MainActivity.this, "Server Error!",
-                    Toast.LENGTH_SHORT).show();
-            Log.d(TAG, "results equals to null");
-            return;
-        }
 
         if (!result.getStatus().trim().toLowerCase().contains("success")) {
 
@@ -233,7 +237,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         //ITERARE SUI RISULTATI (TROVARE UN MODO PER SWIFTARE
-        beerLogo.setImageResource(R.drawable.ic_demo);
         beerName.setText(name);
         beerDescription.setText(description);
         type.setText(String.format("%s%s", typeName, abv));
