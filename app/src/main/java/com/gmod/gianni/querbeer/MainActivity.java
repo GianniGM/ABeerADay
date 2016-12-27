@@ -62,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     private void bindViews() {
+        //TODO aggiungere butterknife
         progressLoading = (ProgressBar) findViewById(R.id.progress_loading);
         fab = (FloatingActionButton) findViewById(R.id.fab);
         inputLayoutText = (TextInputLayout) findViewById(R.id.input_layout_text);
@@ -184,7 +185,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //Picasso
         if(result.getData().get(0).getLabels() != null){
-            
+
             Picasso.with(this)
                     .load(result.getData().get(0).getLabels().getMedium())
                     .into(beerLogo);
