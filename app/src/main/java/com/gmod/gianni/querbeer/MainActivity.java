@@ -197,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     .load(result.getData().get(0).getLabels().getMedium())
                     .into(beerLogo);
         }
-        
+
 
         if (!result.getStatus().trim().toLowerCase().contains("success")) {
 
